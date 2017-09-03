@@ -1,0 +1,29 @@
+<ng-template [ngIf]="game != null">
+  <div class="dealer">
+    <h3>{{game.dealer.name}}'s hand</h3>
+    <div class="blackjack-hand">
+      <ng-template [ngIf]="game.dealerReveal">
+        <span *ngFor="let card of game.dealer.hand.sortedHand">{{card.display}} | {{card.suit}}, </span>
+      </ng-template>
+      <ng-template [ngIf]="!game.dealerReveal">
+        <span>{{game.dealer.hand.sortedHand.get(0).display}} | {{game.dealer.hand.sortedHand.get(0).suit}}</span>
+      </ng-template>
+    </div>
+    <div class="possible-scores" *ngIf="game.dealerReveal && game.dealer.hand.sortedHand.count() > 0">
+      <i>Score(s)</i><span *ngFor="let score of game.dealer.hand.getPossibleScores()">{{score}}, </span>
+    </div>
+  </div>
+  <hr>
+  <h3>Player Hands</h3>
+  <div class="players">
+    <div class="player" *ngFor="let player of game.players">
+      <div class="player-name">{{player.name}}</div>
+      <div class="player-hand">
+        <span *ngFor="let card of player.hand.sortedHand">{{card.display}} | {{card.suit}}, </span>
+      </div>
+      <div class="possible-scores" *ngIf="player.hand.sortedHand.count() > 0">
+        <i>Score(s)</i><span *ngFor="let score of player.hand.getPossibleScores()">{{score}}, </span>
+      </div>
+    </div>
+  </div>
+</ng-template>
