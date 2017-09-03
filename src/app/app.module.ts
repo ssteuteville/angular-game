@@ -1,6 +1,6 @@
 import {
   NgModule,
-  ApplicationRef
+  ApplicationRef, CUSTOM_ELEMENTS_SCHEMA
 } from '@angular/core';
 import {
   removeNgStyles,
@@ -34,7 +34,8 @@ import 'rxjs';
   /**
    * Expose our Services and Providers into Angular's dependency injection.
    */
-  providers: APP_PROVIDERS
+  providers: APP_PROVIDERS,
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule {
   private rootLoaded: boolean = false;

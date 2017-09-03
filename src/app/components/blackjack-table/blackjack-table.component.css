@@ -13,3 +13,88 @@
 .round-status-blackjack {
   color: purple;
 }
+
+.blackjack-card {
+  display: block;
+  border: solid 1px black;
+  border-radius: 3px;
+  width: 25px;
+  height: 50px;
+}
+
+.blackjack-card.face-down {
+  background: url('../../../assets/img/red-card-back.jpg');
+  margin-left: -12.5px;
+  z-index: 1;
+}
+
+.blackjack-card div {
+  text-align: center;
+  font: 15px Georgia, Times New Roman, serif;
+}
+
+.blackjack-card.suit-hearts, .blackjack-card.suit-diamonds {
+  color: red;
+}
+
+.blackjack-card.suit-hearts:before, .blackjack-card.suit-hearts:after {
+  content: "♥";
+}
+
+.blackjack-card.suit-diamonds:before, .blackjack-card.suit-diamonds:after {
+  content: "♦";
+}
+
+.blackjack-card.suit-spades, .blackjack-card.suit-clubs {
+  color: black;
+}
+
+.blackjack-card.suit-spades:before, .blackjack-card.suit-spades:after {
+  content: "♠";
+}
+
+.blackjack-card.suit-clubs:before, .blackjack-card.suit-clubs:after {
+  content: "♣";
+}
+
+.blackjack-card[class*='suit-']:before {
+  top: 0;
+  left: 2px;
+  position: relative;
+}
+
+.blackjack-card[class*='suit-']:after {
+  bottom: 2px;
+  left: 12px;
+  position: relative;
+}
+
+
+.player-hand {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.current-player {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: green;
+}
+
+.players {
+  display: flex;
+  flex-direction: column;
+}
+
+.player-wrapper {
+  display: flex;
+  flex-direction: row;
+}
+
+.player {
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+}

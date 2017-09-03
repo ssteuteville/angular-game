@@ -2,7 +2,7 @@ import { Actions, Effect } from '@ngrx/effects';
 import {
   AppStateActions, BlackjackAIDealerDecision, BlackjackAIDealerTurn, BlackjackAIDecision, BlackjackAITurn,
   BlackjackPlayerDecision,
-  BlackjackStarted, SetNameAction,
+  BlackjackStarted, NoOperation, SetNameAction,
   StartBlackjack
 } from './app-state.actions';
 import { Injectable } from '@angular/core';
@@ -34,20 +34,18 @@ export class AppStateEffects {
   @Effect({dispatch: false})
   blackJackAITurn = this.actions$
     .ofType(BlackjackAIDealerTurn.typeId, BlackjackAITurn.typeId)
-    .distinctUntilChanged()
     .do((action: BlackjackAITurn | BlackjackAIDealerTurn) => {
       this.bjService.blackJackAIHitOrStay(action.payload);
     });
 
-  @Effect({dispatch: false})
+  @Effect()
   blackjackAIDecision = this.actions$
     .ofType(BlackjackAIDecision.typeId)
-    .distinctUntilChanged()
-    .do((action: BlackjackAIDecision) => {
-      console.log('side effect');
-      if (action.payload.isHitting && !(<BlackjackPlayer>action.payload).hand.hasBusted()) { // if an ai hits they get to make another decision
-        this.bjService.blackJackAIHitOrStay(action.payload);
+    .map((action) => {
+      if (action.payload.isHitting && !(<BlackjackPlayer>action.payload).hand.hasBusted()) {
+        return new BlackjackAITurn(action.payload);
       }
+      return new NoOperation();
     });
 
   constructor(private actions$: Actions, private router: Router,

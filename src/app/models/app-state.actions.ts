@@ -75,6 +75,12 @@ export class BlackjackAIDealerDecision implements  Action {
   }
 }
 
+export class NoOperation implements Action {
+  public static typeId = 'NO_OPERATION';
+  public type = NoOperation.typeId;
+  public payload: null = null;
+}
+
 export type AppStateActions
   = SetNameAction
   | StartBlackjack
@@ -83,4 +89,5 @@ export type AppStateActions
   | BlackjackAIDealerTurn
   | BlackjackPlayerDecision
   | BlackjackAIDealerDecision
-  | BlackjackAIDecision;
+  | BlackjackAIDecision
+  | NoOperation;

@@ -12,6 +12,7 @@ import { BlackjackGame } from '../../models/blackjack/blackjack-game.model';
 import { Observable } from 'rxjs/Observable';
 import { BlackjackAIDealerTurn, BlackjackAITurn, BlackjackPlayerDecision } from '../../models/app-state.actions';
 import { BlackjackPlayer } from '../../models/blackjack/blackjack-player.model';
+import { ICard } from '../../models/card.model';
 @Component({
   selector: 'blackjack-table',  // <home></home>
   styleUrls: [ './blackjack-table.component.css' ],
@@ -80,7 +81,6 @@ export class BlackjackTableComponent implements OnInit, OnDestroy{
   public playerHit(player: BlackjackPlayer): void {
     let playerAndDecision = <BlackjackPlayer & { isHitting}> player;
     playerAndDecision.isHitting = true;
-    this.playersTurn = false; // todo this shouldn't be here but right now players can only hit once
     this._store.dispatch(new BlackjackPlayerDecision(playerAndDecision))
   }
 
@@ -89,5 +89,9 @@ export class BlackjackTableComponent implements OnInit, OnDestroy{
     playerAndDecision.isHitting = false;
     this.playersTurn = false;
     this._store.dispatch(new BlackjackPlayerDecision(playerAndDecision))
+  }
+
+  public get dealersFirstCard(): ICard {
+    return this.game.dealer.hand.sortedHand.get(0);
   }
 }
