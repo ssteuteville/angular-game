@@ -17,21 +17,60 @@ export class BlackjackGame implements CardGame {
   }
 
   public hit(player: BlackjackPlayer | CardDealer): void {
+    console.log(player.name + ' hits');
     this.dealer.dealNextCard(player);
-    if (/*(<BlackjackHand> player.hand).hasBroke() && **/(<CardDealer> player).deal == null) { // TODO FIGURE OUT HOW TO HANDLE THIS
-      this.currentPlayer ++;  // TODO CONTINUED: since currentplay doesn't change on a hit unless the player busts
-    }                         // the select in the component never fires to cause player to decide again.
+    console.log(player.hand);
+    if ((<BlackjackPlayer> player).hand.hasBusted() && (<CardDealer> player).deal == null) {
+      console.log('busted')
+      this.currentPlayer ++;
+    }
   }
 
   public pass(player: BlackjackPlayer  | CardDealer): void {
-    (<BlackjackPlayer> player).hasPassed = true;
+    console.log(player.name + ' passes');
     if ((<CardDealer> player).deal == null) {
+      console.log('wasn not dealer, increment');
       this.currentPlayer ++;
     }
   }
 
   public dealHand(): void {
     this.dealer.deal(this.players);
+  }
+
+  public calculateWinners(): void {
+    let dealerScores = (<BlackjackHand> this.dealer.hand).getPossibleScores().filter((score) => score <= 21);
+    let dealerBusted: boolean =  dealerScores.length == 0;
+    let dealerHigh: number;
+    if (!dealerBusted) {
+      dealerHigh = Math.max(...dealerScores);
+    } else {
+      dealerHigh = 0;
+    }
+    this.players.forEach((player: BlackjackPlayer) => {
+      if (player.hand.roundState != 'blackjack') { // skipp processing players who won on draw
+        let playerScores: number[] = player.hand.getPossibleScores()
+          .filter((score) => score <= 21)
+          .sort()
+          .reverse();
+        let busted: boolean = playerScores.length == 0;
+        if (dealerBusted && !busted) {
+          player.hand.roundState = 'winner';
+        }
+        else if (!busted && !dealerBusted) {
+          let score = playerScores[0]; // since the scores are sorted in
+          if (score == dealerHigh) {   // reverse order and filtered we can just use the first element
+            player.hand.roundState = 'tie';
+          } else if (score > dealerHigh) {
+            player.hand.roundState = 'winner';
+          } else {
+            player.hand.roundState = 'loser';
+          }
+        } else {
+          player.hand.roundState = 'loser';
+        }
+      }
+    })
   }
 
 }

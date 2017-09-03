@@ -17,12 +17,18 @@
   <h3>Player Hands</h3>
   <div class="players">
     <div class="player" *ngFor="let player of game.players">
-      <div class="player-name">{{player.name}}</div>
+      <div class="player-name">
+        {{player.name}} <span *ngIf="game.dealerReveal" class="round-status-{{player.hand.roundState}}">{{player.hand.roundState}}</span>
+      </div>
       <div class="player-hand">
         <span *ngFor="let card of player.hand.sortedHand">{{card.display}} | {{card.suit}}, </span>
       </div>
       <div class="possible-scores" *ngIf="player.hand.sortedHand.count() > 0">
         <i>Score(s)</i><span *ngFor="let score of player.hand.getPossibleScores()">{{score}}, </span>
+      </div>
+      <div class="player-actions" *ngIf="player.name == playerName && playersTurn">
+        <button type="button" (click)="playerHit(player)">Hit</button>
+        <button type="button" (click)="playerPass(player)">Pass</button>
       </div>
     </div>
   </div>

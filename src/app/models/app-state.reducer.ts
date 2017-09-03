@@ -1,8 +1,8 @@
 import * as Immutable from 'immutable';
 import {
-  AppStateActions, BlackjackAIDealerDecision, BlackjackAIDealerTurn, BlackjackAIDecision, BlackjackAITurn,
+  AppStateActions, BlackjackAIDealerDecision, BlackjackAIDealerTurn, BlackjackPlayerDecision, BlackjackAITurn,
   BlackjackStarted, SetNameAction,
-  StartBlackjack
+  StartBlackjack, BlackjackAIDecision
 } from './app-state.actions';
 import { AppState } from '../app.model';
 import { DEFAULT_APP_STATE } from './index';
@@ -26,12 +26,13 @@ export function appStateReducer(state: AppState = DEFAULT_APP_STATE,
     case BlackjackAIDealerTurn.typeId:
       return state;
     case BlackjackAIDecision.typeId:
+    case BlackjackPlayerDecision.typeId:
       game = <BlackjackGame> state.tableState.game;
-      let currentPlayer: BlackjackPlayer = (<BlackjackGame> game).players[game.currentPlayer];
+      (<BlackjackGame> game).players[game.currentPlayer] = <BlackjackPlayer> action.payload;
       if ((<any> action.payload).isHitting) {
-        game.hit(currentPlayer);
+        game.hit(action.payload);
       } else {
-        game.pass(currentPlayer);
+        game.pass(action.payload);
       }
       return _.merge(state, {tableState: {game}});
     case BlackjackAIDealerDecision.typeId:
@@ -42,6 +43,7 @@ export function appStateReducer(state: AppState = DEFAULT_APP_STATE,
         game.pass(state.tableState.game.dealer);
       }
       game.dealerReveal = true;
+      game.calculateWinners();
       return _.merge(state, {tableState: {game}});
     default:
       return state;

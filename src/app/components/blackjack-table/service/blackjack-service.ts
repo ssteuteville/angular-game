@@ -8,7 +8,10 @@ import { BlackjackPlayer } from '../../../models/blackjack/blackjack-player.mode
 import Random from 'random-js';
 import { AppState } from '../../../app.model';
 import { Store } from '@ngrx/store';
-import { BlackjackAIDealerDecision, BlackjackAIDecision, BlackjackStarted } from '../../../models/app-state.actions';
+import {
+  BlackjackAIDealerDecision, BlackjackAIDecision, BlackjackPlayerDecision,
+  BlackjackStarted
+} from '../../../models/app-state.actions';
 import { BlackjackHand } from '../../../models/blackjack/blackjack-hand.model';
 import { Observable } from 'rxjs/Observable';
 

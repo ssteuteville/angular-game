@@ -1,0 +1,15 @@
+.round-status-winner {
+  color: green;
+}
+
+.round-status-loser {
+  color: red;
+}
+
+.round-status-tie {
+  color: blue;
+}
+
+.round-status-blackjack {
+  color: purple;
+}

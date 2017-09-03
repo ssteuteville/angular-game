@@ -48,7 +48,16 @@ export class BlackjackAIDealerTurn implements Action {
   }
 }
 
-export class BlackjackAIDecision implements  Action {
+export class BlackjackPlayerDecision implements  Action {
+  public static typeId = 'BLACKJACK_PLAYER_DECISION';
+  public type = BlackjackPlayerDecision.typeId;
+  public payload: BlackjackPlayer & { isHitting: boolean};
+  constructor(payload: BlackjackPlayer & { isHitting: boolean}) {
+    this.payload = payload;
+  }
+}
+
+export class BlackjackAIDecision implements Action {
   public static typeId = 'BLACKJACK_AI_DECISION';
   public type = BlackjackAIDecision.typeId;
   public payload: BlackjackPlayer & { isHitting: boolean};
@@ -72,5 +81,6 @@ export type AppStateActions
   | BlackjackStarted
   | BlackjackAITurn
   | BlackjackAIDealerTurn
-  | BlackjackAIDecision
-  | BlackjackAIDealerDecision;
+  | BlackjackPlayerDecision
+  | BlackjackAIDealerDecision
+  | BlackjackAIDecision;

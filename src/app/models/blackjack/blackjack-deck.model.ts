@@ -34,8 +34,8 @@ export class BlackjackDeck extends CardDeck {
     super(cards);
   }
 
-  public generateHands(headCount: number): GameHand[] {
-    let hands: {[index: number]: GameHand} = {};
+  public generateHands(headCount: number): BlackjackHand[] {
+    let hands: {[index: number]: BlackjackHand} = {};
     for (let i = 0; i < 2; i++) {
       for (let j = 0; j < headCount; j++) {
         if (hands[j] == null) {
@@ -44,6 +44,12 @@ export class BlackjackDeck extends CardDeck {
         hands[j].addCard(this.nextCard());
       }
     }
-    return Object.keys(hands).map((key) => hands[key]);
+    return Object.keys(hands).map((key) => {
+      let hand: BlackjackHand = hands[key];
+      if (hand.getPossibleScores().some((score) => score == 21)) {
+        hand.roundState = 'blackjack';
+      }
+      return hand;
+    });
   }
 }

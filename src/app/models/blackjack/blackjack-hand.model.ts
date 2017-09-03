@@ -3,6 +3,7 @@ import { CardComparator, ICard } from '../card.model';
 import * as Immutable from 'Immutable';
 
 export class BlackjackHand extends GameHand {
+  public roundState: 'initial' | 'passed' | 'winner' | 'loser' | 'tie' | 'blackjack' = 'initial';
   private _isUpdated: boolean = true;
   private _possibleScores: number[];
 
@@ -12,8 +13,8 @@ export class BlackjackHand extends GameHand {
     this._possibleScores = this.getPossibleScores();
   }
 
-  public hasBroke(): boolean {
-    return this._possibleScores.every((score) => {
+  public hasBusted(): boolean {
+    return this.getPossibleScores().every((score) => {
       return score > 21;
     });
   }
