@@ -61,7 +61,7 @@ var ac_polyfills =
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "b4ce7b61d67802512c24"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "62f9fd10ddbd7577ce0a"; // eslint-disable-line no-unused-vars
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
@@ -715,7 +715,7 @@ var ac_polyfills =
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "/angular-casino/";
+/******/ 	__webpack_require__.p = "/angular-game/";
 /******/
 /******/ 	// __webpack_hash__
 /******/ 	__webpack_require__.h = function() { return hotCurrentHash; };
