@@ -98,8 +98,6 @@ export class BlackjackTableComponent implements OnInit, OnDestroy{
         .select((state: any) => state.appState.tableState.game.currentPlayer)
         .distinctUntilChanged()
         .subscribe((currentPlayer: number) => {
-          console.log('current player');
-          console.log(currentPlayer);
           let player = this.game.players[currentPlayer];
           if (player != null && this.game.dealer.hasCards()) {
             if (player.name != this.playerName) {

@@ -12,7 +12,9 @@ import { BlackjackGame } from './blackjack/blackjack-game.model';
 
 export function appStateReducer(state: AppState = DEFAULT_APP_STATE,
                                 action: AppStateActions): AppState {
-  console.log(action);
+  if (action.type != '@ngrx/store/init') {
+    console.log(action);
+  }
   let game;
   switch (action.type) {
     case SetNameAction.typeId:

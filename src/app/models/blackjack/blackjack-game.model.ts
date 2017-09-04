@@ -64,7 +64,6 @@ export class BlackjackGame implements CardGame {
           player.hand.roundState = 'winner';
         }
         else if (!busted && !dealerBusted) {
-          console.log(playerScores);
           let score = playerScores[0]; // since the scores are sorted in
           if (score == dealerHigh) {   // reverse order and filtered we can just use the first element
             player.hand.roundState = 'tie';

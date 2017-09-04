@@ -48,7 +48,6 @@ export class HomeComponent implements OnInit {
   }
 
   public ngOnInit() {
-    console.log('hello `Home` component');
     this._store.subscribe((update: any) => {
       this.appState = update.appState;
     });
