@@ -11,27 +11,32 @@ export class BlackjackGame implements CardGame {
 
   public dealerReveal: boolean = false;
 
+  public roundOver: boolean = false;
+
   constructor(public dealer: CardDealer, public players: BlackjackPlayer[],
               public currentPlayer: number) {
     this.dealHand();
   }
 
   public hit(player: BlackjackPlayer | CardDealer): void {
-    console.log(player.name + ' hits');
     this.dealer.dealNextCard(player);
-    console.log(player.hand);
+
     if ((<BlackjackPlayer> player).hand.hasBusted() && (<CardDealer> player).deal == null) {
-      console.log('busted')
       this.currentPlayer ++;
     }
   }
 
   public pass(player: BlackjackPlayer  | CardDealer): void {
-    console.log(player.name + ' passes');
     if ((<CardDealer> player).deal == null) {
-      console.log('wasn not dealer, increment');
       this.currentPlayer ++;
     }
+  }
+
+  public nextRound(): void {
+    this.dealerReveal = false;
+    this.roundOver = false;
+    this.currentPlayer = 0;
+    this.dealer.deal(this.players, this.dealer.cardCount() <= (this.players.length * 5));
   }
 
   public dealHand(): void {
@@ -39,6 +44,8 @@ export class BlackjackGame implements CardGame {
   }
 
   public calculateWinners(): void {
+    this.roundOver = true;
+
     let dealerScores = (<BlackjackHand> this.dealer.hand).getPossibleScores().filter((score) => score <= 21);
     let dealerBusted: boolean =  dealerScores.length == 0;
     let dealerHigh: number;
@@ -51,13 +58,13 @@ export class BlackjackGame implements CardGame {
       if (player.hand.roundState != 'blackjack') { // skipp processing players who won on draw
         let playerScores: number[] = player.hand.getPossibleScores()
           .filter((score) => score <= 21)
-          .sort()
-          .reverse();
+          .sort();
         let busted: boolean = playerScores.length == 0;
         if (dealerBusted && !busted) {
           player.hand.roundState = 'winner';
         }
         else if (!busted && !dealerBusted) {
+          console.log(playerScores);
           let score = playerScores[0]; // since the scores are sorted in
           if (score == dealerHigh) {   // reverse order and filtered we can just use the first element
             player.hand.roundState = 'tie';
@@ -72,5 +79,4 @@ export class BlackjackGame implements CardGame {
       }
     })
   }
-
 }

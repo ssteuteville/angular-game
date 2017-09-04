@@ -39,6 +39,22 @@ export class BlackjackAITurn implements Action {
   }
 }
 
+export class BlackjackNextRound implements Action {
+  public static typeId = 'BLACKJACK_NEXT_ROUND';
+  public type = BlackjackNextRound.typeId;
+  public payload: BlackjackGame;
+  constructor(payload: BlackjackGame) {
+    this.payload = payload;
+  }
+}
+export class BlackjackRoundComplete implements Action {
+  public static typeId = 'BLACKJACK_ROUND_COMPLETE';
+  public type = BlackjackRoundComplete.typeId;
+  public payload: null;
+  constructor() {
+  }
+}
+
 export class BlackjackAIDealerTurn implements Action {
   public static typeId = 'BLACKJACK_AI_DEALER_TURN';
   public type = BlackjackAIDealerTurn.typeId;
@@ -90,4 +106,6 @@ export type AppStateActions
   | BlackjackPlayerDecision
   | BlackjackAIDealerDecision
   | BlackjackAIDecision
-  | NoOperation;
+  | BlackjackNextRound
+  | NoOperation
+  | BlackjackRoundComplete;

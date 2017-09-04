@@ -10,7 +10,10 @@ import { AppState } from '../../app.model';
 import { TableState } from '../../models/table.model';
 import { BlackjackGame } from '../../models/blackjack/blackjack-game.model';
 import { Observable } from 'rxjs/Observable';
-import { BlackjackAIDealerTurn, BlackjackAITurn, BlackjackPlayerDecision } from '../../models/app-state.actions';
+import {
+  BlackjackAIDealerTurn, BlackjackAITurn, BlackjackNextRound,
+  BlackjackPlayerDecision
+} from '../../models/app-state.actions';
 import { BlackjackPlayer } from '../../models/blackjack/blackjack-player.model';
 import { ICard } from '../../models/card.model';
 @Component({
@@ -58,11 +61,13 @@ export class BlackjackTableComponent implements OnInit, OnDestroy{
           let player = this.game.players[currentPlayer];
           if (player != null && this.game.dealer.hasCards()) {
             if (player.name != this.playerName) {
+              this.playersTurn = false;
               this._store.dispatch(new BlackjackAITurn(this.game.players[currentPlayer]));
             } else {
               this.playersTurn = true;
             }
           } else if (this.game.dealer.hasCards()) {
+            this.playersTurn = false;
             this._store.dispatch(new BlackjackAIDealerTurn(this.game.dealer));
           } else {
             throw new Error('out of cards'); // todo, this isn't really an error case but i'm lazy
@@ -93,5 +98,9 @@ export class BlackjackTableComponent implements OnInit, OnDestroy{
 
   public get dealersFirstCard(): ICard {
     return this.game.dealer.hand.sortedHand.get(0);
+  }
+
+  public nextRound(): void {
+    this._store.dispatch(new BlackjackNextRound(this.game));
   }
 }

@@ -12,8 +12,14 @@ export class CardDealer {
     return !this.deck.isEmpty();
   }
 
-  public deal(players: CardPlayer[]): void {
-    this.deck.reshuffle();
+  public cardCount(): number {
+    return this.deck.cardCount();
+  }
+
+  public deal(players: CardPlayer[], reshuffle = false): void {
+    if (reshuffle) {
+      this.deck.reshuffle();
+    }
     this.deck.generateHands(players.length + 1).forEach((hand: GameHand, index) => {
       if (index >= players.length) {
         this.hand = hand;
@@ -21,6 +27,10 @@ export class CardDealer {
         players[index].hand = hand;
       }
     });
+  }
+
+  public reshuffle(): void {
+    this.deck.reshuffle();
   }
 
   public dealNextCard(player: CardPlayer) {

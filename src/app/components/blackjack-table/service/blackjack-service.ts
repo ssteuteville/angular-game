@@ -17,7 +17,7 @@ import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class BlackjackService {
-  private _aiPlayers: string[] = ['John', 'Suzy', 'Phil'];
+  private _aiPlayers: string[] = ['Homer', 'Ahri', 'Corey'];
 
   constructor(private _store: Store<AppState>) {
 
@@ -44,9 +44,12 @@ export class BlackjackService {
     }
     let scores = handAsBlackjack.getPossibleScores();
     let highestScore = Math.max(...scores);
-    let isHitting: boolean = highestScore <= 13 || (highestScore < 17 && Random().bool());
+    let isDealer = (<CardDealer> player).deal != null;
+    let doesDealerHit = isDealer && (highestScore < 17 || (highestScore == 17 && scores.length > 1));
+    let doesPlayerHit = !isDealer && (highestScore <= 13 || (highestScore < 17 && Random().bool()));
+    let isHitting: boolean = doesDealerHit || doesPlayerHit;
     setTimeout(() => {
-      if ((<CardDealer> player).deal != null) {
+      if (isDealer) {
         this._store.dispatch(new BlackjackAIDealerDecision(
           _.merge(<CardDealer> player, {isHitting}))
         );

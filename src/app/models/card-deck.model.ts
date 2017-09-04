@@ -19,6 +19,10 @@ export abstract class CardDeck {
     return this.cardStack.isEmpty();
   }
 
+  public cardCount(): number {
+    return this.cardStack.count();
+  }
+
   public nextCard(): ICard {
     if (this.isEmpty()) {
       throw new Error('EmptyDeck');

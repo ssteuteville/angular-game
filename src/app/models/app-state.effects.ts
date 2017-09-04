@@ -1,7 +1,7 @@
 import { Actions, Effect } from '@ngrx/effects';
 import {
   AppStateActions, BlackjackAIDealerDecision, BlackjackAIDealerTurn, BlackjackAIDecision, BlackjackAITurn,
-  BlackjackPlayerDecision,
+  BlackjackPlayerDecision, BlackjackRoundComplete,
   BlackjackStarted, NoOperation, SetNameAction,
   StartBlackjack
 } from './app-state.actions';
@@ -46,6 +46,16 @@ export class AppStateEffects {
         return new BlackjackAITurn(action.payload);
       }
       return new NoOperation();
+    });
+
+  @Effect()
+  blackjackAIDealerDecision = this.actions$
+    .ofType(BlackjackAIDealerDecision.typeId)
+    .map((action) => {
+      if (action.payload.isHitting && !(<BlackjackPlayer>action.payload).hand.hasBusted()) {
+        return new BlackjackAIDealerTurn(action.payload);
+      }
+      return new BlackjackRoundComplete();
     });
 
   constructor(private actions$: Actions, private router: Router,

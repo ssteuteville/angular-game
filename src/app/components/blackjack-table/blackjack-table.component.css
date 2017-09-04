@@ -98,3 +98,13 @@
   flex-direction: column;
   width: 200px;
 }
+
+.player-photo {
+  margin-right: 10px;
+}
+
+.player-photo img {
+  height: 75px;
+  width: 75px;
+  border-radius: 50%;
+}

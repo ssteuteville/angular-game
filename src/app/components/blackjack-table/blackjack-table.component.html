@@ -1,6 +1,6 @@
 <ng-template [ngIf]="game != null">
   <div class="dealer">
-    <h3>{{game.dealer.name}}'s hand</h3>
+    <h3>{{game.dealer.name}}</h3>
     <div class="player-hand">
       <ng-template [ngIf]="game.dealerReveal">
         <div *ngFor="let card of game.dealer.hand.sortedHand" class="suit-{{card.suit}} blackjack-card">
@@ -18,11 +18,16 @@
       <span>{{game.dealer.hand.getPossibleScores() | orDelimiter}}</span>
     </div>
   </div>
+  <small>cards left: {{game.dealer.cardCount()}}</small>
   <hr>
   <h3>Player Hands</h3>
   <div class="players">
     <ng-template ngFor let-player [ngForOf]="game.players" let-i="index">
       <div class="player-wrapper">
+        <div class="player-photo">
+          <img *ngIf="player.name != playerName" src="/assets/img/{{player.name | imgFormat}}.png" />
+          <img *ngIf="player.name == playerName" src="/assets/img/player.png" />
+        </div>
         <div class="player">
           <div class="player-name">
             {{player.name}}
@@ -38,6 +43,9 @@
           <div class="player-actions" *ngIf="player.name == playerName && playersTurn">
             <button type="button" (click)="playerHit(player)">Hit</button>
             <button type="button" (click)="playerPass(player)">Pass</button>
+          </div>
+          <div class="player-actions" *ngIf="player.name == playerName && game.roundOver">
+            <button type="button" (click)="nextRound()">Next Round</button>
           </div>
         </div>
         <div class="current-player" *ngIf="game.currentPlayer == i"></div>

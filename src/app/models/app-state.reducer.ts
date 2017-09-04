@@ -2,7 +2,7 @@ import * as Immutable from 'immutable';
 import {
   AppStateActions, BlackjackAIDealerDecision, BlackjackAIDealerTurn, BlackjackPlayerDecision, BlackjackAITurn,
   BlackjackStarted, SetNameAction,
-  StartBlackjack, BlackjackAIDecision
+  StartBlackjack, BlackjackAIDecision, BlackjackNextRound, BlackjackRoundComplete
 } from './app-state.actions';
 import { AppState } from '../app.model';
 import { DEFAULT_APP_STATE } from './index';
@@ -23,7 +23,9 @@ export function appStateReducer(state: AppState = DEFAULT_APP_STATE,
       state.tableState = _.assign(state.tableState, { game: action.payload });
       return state;
     case BlackjackAITurn.typeId:
+      return state;
     case BlackjackAIDealerTurn.typeId:
+      (<BlackjackGame> state.tableState.game).dealerReveal = true;
       return state;
     case BlackjackAIDecision.typeId:
     case BlackjackPlayerDecision.typeId:
@@ -34,7 +36,7 @@ export function appStateReducer(state: AppState = DEFAULT_APP_STATE,
       } else {
         game.pass(action.payload);
       }
-      return _.merge(state, {tableState: {game}});
+      return state;
     case BlackjackAIDealerDecision.typeId:
       game = <BlackjackGame> state.tableState.game;
       if ((<any> action.payload).isHitting) {
@@ -42,9 +44,15 @@ export function appStateReducer(state: AppState = DEFAULT_APP_STATE,
       } else {
         game.pass(state.tableState.game.dealer);
       }
-      game.dealerReveal = true;
-      game.calculateWinners();
       return _.merge(state, {tableState: {game}});
+    case BlackjackNextRound.typeId:
+      game = (<BlackjackGame> action.payload);
+      game.nextRound();
+      state.tableState.game = game;
+      return state;
+    case BlackjackRoundComplete.typeId:
+      game = <BlackjackGame> state.tableState.game;
+      game.calculateWinners();
     default:
       return state;
   }
