@@ -39,7 +39,7 @@ export class BlackjackTableComponent implements OnInit, OnDestroy{
 
   public ngOnInit(): void {
     this.subscriptions.push(this._store
-        .select((state: any) => state.appState.tableState)
+        .select((state: any) => state.tableState)
         .subscribe((tableState: TableState) => {
           if (tableState == null) {
             this.router.navigate(['home']);
@@ -54,6 +54,7 @@ export class BlackjackTableComponent implements OnInit, OnDestroy{
 
     this.subscriptions.push(this._store
       .select((state: any) => state.appState.playerName)
+      .filter((state: any) => state != null)
       .distinctUntilChanged()
       .subscribe((playerName: string) => this.playerName = playerName)
     );
@@ -95,7 +96,10 @@ export class BlackjackTableComponent implements OnInit, OnDestroy{
     this.currentPlayerInitialized = true;
     this.subscriptions.push(
       this._store
-        .select((state: any) => state.appState.tableState.game.currentPlayer)
+        .select((state: any) => {
+          return state.tableState.game.currentPlayer
+        })
+        .filter((state: any) => state != null)
         .distinctUntilChanged()
         .subscribe((currentPlayer: number) => {
           let player = this.game.players[currentPlayer];

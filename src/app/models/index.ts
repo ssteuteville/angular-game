@@ -13,6 +13,7 @@ function stateSetter(reducer: ActionReducer<any>): ActionReducer<any> {
     switch (action.type) {
       case 'SET_ROOT_STATE':
       // case GameStateLoadSuccessAction.typeId:
+        return action.payload;
       default:
         return reducer(state, action);
     }

@@ -3,6 +3,7 @@ import { CardPlayer } from '../card-player.model';
 import { CardDealer } from '../card-dealer.model';
 import { BlackjackPlayer } from './blackjack-player.model';
 import { BlackjackHand } from './blackjack-hand.model';
+import { BlackjackDeck } from './blackjack-deck.model';
 
 export class BlackjackGame implements CardGame {
   public static typeId = 'blackjack';
@@ -12,6 +13,33 @@ export class BlackjackGame implements CardGame {
   public dealerReveal: boolean = false;
 
   public roundOver: boolean = false;
+
+  public static fromJson(data: any): BlackjackGame {
+    data = data.appState;
+    if (data.playerName == null || data.tableState == null || data.tableState.game == null) {
+      return null;
+    }
+    let playerName: string = data.playerName;
+    let game = data.tableState.game;
+
+    if (game.currentPlayer == null || game.dealer == null || game.players == null
+        || game.roundOver == null || game.type == null || game.dealerReveal == null) {
+      return null;
+    }
+
+    let players: BlackjackPlayer[] = game.players.map((player) => {
+      let _player = new BlackjackPlayer(player.name);
+      _player.hand = BlackjackHand.fromJson(player.hand);
+      return _player;
+    });
+
+    let dealer: CardDealer = new CardDealer(game.dealer.name, BlackjackDeck.fromJson(game.dealer.deck));
+    dealer.hand = BlackjackHand.fromJson(game.dealer.hand);
+
+    let bJGame = new BlackjackGame(dealer, players, game.currentPlayer);
+    bJGame.dealerReveal = game.dealerReveal;
+    return bJGame;
+  }
 
   constructor(public dealer: CardDealer, public players: BlackjackPlayer[],
               public currentPlayer: number) {

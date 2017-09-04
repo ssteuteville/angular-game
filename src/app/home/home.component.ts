@@ -7,8 +7,10 @@ import { Title } from './title';
 import { XLargeDirective } from './x-large';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { SetNameAction, StartBlackjack } from '../models/app-state.actions';
+import { LoadAppState, SetNameAction, StartBlackjack } from '../models/app-state.actions';
 import { AppState } from '../app.model';
+import { Router } from '@angular/router';
+import { BlackjackGame } from '../models/blackjack/blackjack-game.model';
 
 @Component({
   /**
@@ -43,13 +45,17 @@ export class HomeComponent implements OnInit {
    */
   constructor(
     private _store: Store<AppState>,
-    public title: Title
+    public title: Title,
+    private router: Router
   ) {
   }
 
   public ngOnInit() {
-    this._store.subscribe((update: any) => {
-      this.appState = update.appState;
+    this._store.dispatch(new LoadAppState());
+    this._store
+      .filter((state: AppState) => state != null)
+      .subscribe((update: AppState) => {
+        this.appState = update;
     });
   }
 
@@ -59,5 +65,9 @@ export class HomeComponent implements OnInit {
 
   public playBlackJack(): void {
     this._store.dispatch(new StartBlackjack(this.appState.playerName));
+  }
+
+  public resumeBlackJack(): void {
+    this.router.navigate(['blackjack']);
   }
 }

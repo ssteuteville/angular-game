@@ -7,6 +7,19 @@ export class BlackjackHand extends GameHand {
   private _isUpdated: boolean = true;
   private _possibleScores: number[];
 
+  public static fromJson(data: any): BlackjackHand {
+    if (data.hand == null || data.sortedHand == null || data.roundState == null
+        || data._isUpdated == null || data._possibleScores == null) {
+      return null;
+    }
+    let hand = new BlackjackHand(Immutable.fromJS(data.hand));
+    hand.sortedHand = data.sortedHand;
+    hand.roundState = data.roundState;
+    hand._isUpdated = data._isUpdated;
+    hand._possibleScores = data._possibleScores;
+    return hand;
+  }
+
   constructor(hand: Immutable.List<ICard> = Immutable.fromJS([]),
               sortComp?: CardComparator) {
     super(hand, sortComp);

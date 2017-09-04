@@ -30,8 +30,18 @@ export class BlackjackDeck extends CardDeck {
     return new BlackjackDeck(Immutable.List<ICard>(ret));
   }
 
-  constructor(protected cards: Immutable.List<ICard>) {
-    super(cards);
+  public static fromJson(data: any): BlackjackDeck {
+    if (data.cardStack == null || data.cards == null){
+      return null;
+    }
+    let deck = new BlackjackDeck(data.cards, false);
+    deck.cardStack = Immutable.Stack<ICard>();
+    deck.cardStack = deck.cardStack.pushAll(data.cardStack);
+    return deck;
+  }
+
+  constructor(protected cards: Immutable.List<ICard>, reshuffle = true) {
+    super(cards, reshuffle);
   }
 
   public generateHands(headCount: number): BlackjackHand[] {

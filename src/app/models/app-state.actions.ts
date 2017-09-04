@@ -2,6 +2,7 @@ import { Action } from '@ngrx/store';
 import { BlackjackGame } from './blackjack/blackjack-game.model';
 import { BlackjackPlayer } from './blackjack/blackjack-player.model';
 import { CardDealer } from './card-dealer.model';
+import { AppState } from '../app.model';
 
 export class SetNameAction implements Action {
   public static typeId = 'SET_NAME';
@@ -97,6 +98,27 @@ export class NoOperation implements Action {
   public payload: null = null;
 }
 
+export class SaveAppState implements Action {
+  public static typeId = 'SAVE_APP_STATE';
+  public type = SaveAppState.typeId;
+  constructor(public payload: AppState) {
+  }
+}
+
+export class LoadAppState implements Action {
+  public static typeId = 'LOAD_APP_STATE';
+  public type = LoadAppState.typeId;
+  constructor(public payload: null = null) {
+  }
+}
+
+export class NoAppStateLoaded implements Action {
+  public static typeId = 'NO_APP_STATE_LOADED';
+  public type = NoAppStateLoaded.typeId;
+  constructor(public payload: null = null) {
+  }
+}
+
 export type AppStateActions
   = SetNameAction
   | StartBlackjack
@@ -107,5 +129,8 @@ export type AppStateActions
   | BlackjackAIDealerDecision
   | BlackjackAIDecision
   | BlackjackNextRound
+  | BlackjackRoundComplete
   | NoOperation
-  | BlackjackRoundComplete;
+  | SaveAppState
+  | LoadAppState
+  | NoAppStateLoaded;

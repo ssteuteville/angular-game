@@ -6,8 +6,10 @@ import { GameHand } from './game-hand.model';
 export abstract class CardDeck {
   protected cardStack: Immutable.Stack<ICard>;
 
-  constructor(protected cards: Immutable.List<ICard>) {
-    this.reshuffle();
+  constructor(protected cards: Immutable.List<ICard>, reshuffle = true) {
+    if (reshuffle) {
+      this.reshuffle();
+    }
   }
 
   public reshuffle(): void {

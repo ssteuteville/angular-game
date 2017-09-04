@@ -1,4 +1,4 @@
-<div>
+<div *ngIf="appState">
   <h1 x-large class="sample-content">Welcome Player</h1>
 
   <hr>
@@ -28,6 +28,9 @@
   <div *ngIf="appState && appState.playerName && appState.playerName.length > 0">
     <h2>Which game would you like to play?</h2>
     <div class="game-options">
+      <div *ngIf="appState && appState.tableState && appState.tableState.game && appState.tableState.game.type == 'blackjack'"
+          (click)="resumeBlackJack()"
+          class="game-option">Resume Blackjack Game</div>
       <div (click)="playBlackJack()" class="game-option">Black Jack</div>
       <div class="game-option">More games soon.</div>
     </div>
