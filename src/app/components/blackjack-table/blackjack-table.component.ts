@@ -16,6 +16,7 @@ import {
 } from '../../models/app-state.actions';
 import { BlackjackPlayer } from '../../models/blackjack/blackjack-player.model';
 import { ICard } from '../../models/card.model';
+import { Router } from "@angular/router";
 @Component({
   selector: 'blackjack-table',  // <home></home>
   styleUrls: [ './blackjack-table.component.css' ],
@@ -31,17 +32,23 @@ export class BlackjackTableComponent implements OnInit, OnDestroy{
 
   private subscriptions = [];
 
-  constructor(private _store: Store<AppState>) {
+  private currentPlayerInitialized: boolean = false;
+
+  constructor(private _store: Store<AppState>, private router: Router) {
   }
 
   public ngOnInit(): void {
     this.subscriptions.push(this._store
         .select((state: any) => state.appState.tableState)
-        .filter((tableState: TableState) => {
-          return tableState != null && tableState.game.type === BlackjackGame.typeId;
-        })
         .subscribe((tableState: TableState) => {
-          this.game = <BlackjackGame> tableState.game;
+          if (tableState == null) {
+            this.router.navigate(['home']);
+          } else {
+            this.game = <BlackjackGame> tableState.game;
+            if (!this.currentPlayerInitialized) {
+              this.initializeCurrentPlayer();
+            }
+          }
       })
     );
 
@@ -50,30 +57,10 @@ export class BlackjackTableComponent implements OnInit, OnDestroy{
       .distinctUntilChanged()
       .subscribe((playerName: string) => this.playerName = playerName)
     );
+  }
 
-    this.subscriptions.push(
-      this._store
-        .select((state: any) => state.appState.tableState.game.currentPlayer)
-        .distinctUntilChanged()
-        .subscribe((currentPlayer: number) => {
-          console.log('current player');
-          console.log(currentPlayer);
-          let player = this.game.players[currentPlayer];
-          if (player != null && this.game.dealer.hasCards()) {
-            if (player.name != this.playerName) {
-              this.playersTurn = false;
-              this._store.dispatch(new BlackjackAITurn(this.game.players[currentPlayer]));
-            } else {
-              this.playersTurn = true;
-            }
-          } else if (this.game.dealer.hasCards()) {
-            this.playersTurn = false;
-            this._store.dispatch(new BlackjackAIDealerTurn(this.game.dealer));
-          } else {
-            throw new Error('out of cards'); // todo, this isn't really an error case but i'm lazy
-          }
-        })
-    );
+  startGame(): void {
+
   }
 
   public ngOnDestroy(): void {
@@ -102,5 +89,32 @@ export class BlackjackTableComponent implements OnInit, OnDestroy{
 
   public nextRound(): void {
     this._store.dispatch(new BlackjackNextRound(this.game));
+  }
+
+  private initializeCurrentPlayer(): void {
+    this.currentPlayerInitialized = true;
+    this.subscriptions.push(
+      this._store
+        .select((state: any) => state.appState.tableState.game.currentPlayer)
+        .distinctUntilChanged()
+        .subscribe((currentPlayer: number) => {
+          console.log('current player');
+          console.log(currentPlayer);
+          let player = this.game.players[currentPlayer];
+          if (player != null && this.game.dealer.hasCards()) {
+            if (player.name != this.playerName) {
+              this.playersTurn = false;
+              this._store.dispatch(new BlackjackAITurn(this.game.players[currentPlayer]));
+            } else {
+              this.playersTurn = true;
+            }
+          } else if (this.game.dealer.hasCards()) {
+            this.playersTurn = false;
+            this._store.dispatch(new BlackjackAIDealerTurn(this.game.dealer));
+          } else {
+            throw new Error('out of cards'); // todo, this isn't really an error case but i'm lazy
+          }
+        })
+    );
   }
 }
