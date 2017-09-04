@@ -44,7 +44,7 @@ export class BlackjackService {
     }
     let scores = handAsBlackjack.getPossibleScores();
     let highestScore = Math.max(...scores);
-    let isDealer = (<CardDealer> player).deal != null;
+    let isDealer = (<CardDealer> player).deal != null;  // TODO hitting can't be all based on highestScore
     let doesDealerHit = isDealer && (highestScore < 17 || (highestScore == 17 && scores.length > 1));
     let doesPlayerHit = !isDealer && (highestScore <= 13 || (highestScore < 17 && Random().bool()));
     let isHitting: boolean = doesDealerHit || doesPlayerHit;

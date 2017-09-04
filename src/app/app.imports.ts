@@ -17,7 +17,7 @@ export const APP_IMPORTS = [
   StoreModule.provideStore(rootReducer),
   EffectsModule.run(AppStateEffects),
   RouterModule.forRoot(ROUTES, {
-    useHash: Boolean(history.pushState) === false,
+    useHash: true,
     preloadingStrategy: PreloadAllModules
   })
 ];
