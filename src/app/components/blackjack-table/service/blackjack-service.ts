@@ -42,12 +42,13 @@ export class BlackjackService {
     if (handAsBlackjack.getPossibleScores == null) {
       throw new Error('BlackjackPlayerNoPossibleScores');
     }
-    let scores = handAsBlackjack.getPossibleScores();
-    let highestScore = Math.max(...scores);
-    let isDealer = (<CardDealer> player).deal != null;  // TODO hitting can't be all based on highestScore
+    let scores = handAsBlackjack.getPossibleScores()
+      .filter((score) => score <= 21);
+    let highestScore = Math.max(...scores); //Math.max([]) returns 0
+    let isDealer = (<CardDealer> player).deal != null;
     let doesDealerHit = isDealer && (highestScore < 17 || (highestScore == 17 && scores.length > 1));
     let doesPlayerHit = !isDealer && (highestScore <= 13 || (highestScore < 17 && Random().bool()));
-    let isHitting: boolean = doesDealerHit || doesPlayerHit;
+    let isHitting: boolean = (doesDealerHit || doesPlayerHit) && highestScore != 0;
     setTimeout(() => {
       if (isDealer) {
         this._store.dispatch(new BlackjackAIDealerDecision(
@@ -58,6 +59,6 @@ export class BlackjackService {
           _.merge(<BlackjackPlayer> player, {isHitting}))
         );
       }
-    }, 1000);
+    }, 1500 /*ms*/);
   }
 }
