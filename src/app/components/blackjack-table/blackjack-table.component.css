@@ -112,3 +112,25 @@
 .dealer-photo img {
   width: 75px;
 }
+
+.blackjack-table {
+  display: flex;
+  flex-direction: row;
+}
+
+.game, .options {
+  width: 50%;
+  height: 100%;
+}
+
+.game {
+  border-right: 1px solid black;
+}
+
+.options {
+  padding: 10px;
+}
+
+.options fieldset {
+  min-height: 400px;
+}

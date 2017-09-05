@@ -12,7 +12,7 @@ import { BlackjackGame } from '../../models/blackjack/blackjack-game.model';
 import { Observable } from 'rxjs/Observable';
 import {
   BlackjackAIDealerTurn, BlackjackAITurn, BlackjackNextRound,
-  BlackjackPlayerDecision
+  BlackjackPlayerDecision, SetAISpeed
 } from '../../models/app-state.actions';
 import { BlackjackPlayer } from '../../models/blackjack/blackjack-player.model';
 import { ICard } from '../../models/card.model';
@@ -24,6 +24,8 @@ import { Router } from "@angular/router";
 })
 export class BlackjackTableComponent implements OnInit, OnDestroy{
 
+  private revealCardCount: boolean = false;
+
   private game: BlackjackGame;
 
   private playerName: string;
@@ -33,6 +35,8 @@ export class BlackjackTableComponent implements OnInit, OnDestroy{
   private subscriptions = [];
 
   private currentPlayerInitialized: boolean = false;
+
+  private aiSpeed: number = 1500;
 
   constructor(private _store: Store<AppState>, private router: Router) {
   }
@@ -70,13 +74,15 @@ export class BlackjackTableComponent implements OnInit, OnDestroy{
     this.subscriptions = [];
   }
 
-  public playerHit(player: BlackjackPlayer): void {
+  public playerHit(): void {
+    let player = this.game.players[this.game.currentPlayer];
     let playerAndDecision = <BlackjackPlayer & { isHitting}> player;
     playerAndDecision.isHitting = true;
     this._store.dispatch(new BlackjackPlayerDecision(playerAndDecision))
   }
 
-  public playerPass(player: BlackjackPlayer): void {
+  public playerPass(): void {
+    let player = this.game.players[this.game.currentPlayer];
     let playerAndDecision = <BlackjackPlayer & { isHitting}> player;
     playerAndDecision.isHitting = false;
     this.playersTurn = false;
@@ -89,6 +95,11 @@ export class BlackjackTableComponent implements OnInit, OnDestroy{
 
   public nextRound(): void {
     this._store.dispatch(new BlackjackNextRound(this.game));
+  }
+
+  public setAiSpeed(value: number): void {
+    this.aiSpeed = value;
+    this._store.dispatch(new SetAISpeed(this.aiSpeed));
   }
 
   private initializeCurrentPlayer(): void {

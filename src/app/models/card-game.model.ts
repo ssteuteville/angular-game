@@ -6,4 +6,6 @@ export interface CardGame {
   players: CardPlayer[];
   currentPlayer: number; // index of current player in array
   type: string;
+  aiSpeed: number;
+
 }

@@ -3,6 +3,7 @@ import { CardPlayer } from '../card-player.model';
 import { CardDealer } from '../card-dealer.model';
 import { BlackjackPlayer } from './blackjack-player.model';
 import { BlackjackHand } from './blackjack-hand.model';
+import { BlackjackDealer } from './blackjack-dealer';
 
 export class BlackjackGame implements CardGame {
   public static typeId = 'blackjack';
@@ -13,12 +14,14 @@ export class BlackjackGame implements CardGame {
 
   public roundOver: boolean = false;
 
-  constructor(public dealer: CardDealer, public players: BlackjackPlayer[],
+  public aiSpeed: number = 1500; /* ms */
+
+  constructor(public dealer: BlackjackDealer, public players: BlackjackPlayer[],
               public currentPlayer: number) {
     this.dealHand();
   }
 
-  public hit(player: BlackjackPlayer | CardDealer): void {
+  public hit(player: BlackjackPlayer | BlackjackDealer): void {
     this.dealer.dealNextCard(player);
 
     if ((<BlackjackPlayer> player).hand.hasBusted() && (<CardDealer> player).deal == null) {
@@ -36,7 +39,7 @@ export class BlackjackGame implements CardGame {
     this.dealerReveal = false;
     this.roundOver = false;
     this.currentPlayer = 0;
-    this.dealer.deal(this.players, this.dealer.cardCount() <= (this.players.length * 5));
+    this.dealer.deal(this.players, this.dealer.deckCount() <= (this.players.length * 5));
   }
 
   public dealHand(): void {

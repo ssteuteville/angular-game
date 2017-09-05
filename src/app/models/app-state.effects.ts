@@ -10,6 +10,9 @@ import { Router } from '@angular/router';
 import { BlackjackService } from '../components/blackjack-table/service/blackjack-service';
 import { BlackjackHand } from './blackjack/blackjack-hand.model';
 import { BlackjackPlayer } from './blackjack/blackjack-player.model';
+import { AppState } from '../app.model';
+import { Store } from '@ngrx/store';
+import { BlackjackGame } from './blackjack/blackjack-game.model';
 
 @Injectable()
 export class AppStateEffects {
@@ -34,8 +37,13 @@ export class AppStateEffects {
   @Effect({dispatch: false})
   blackJackAITurn = this.actions$
     .ofType(BlackjackAIDealerTurn.typeId, BlackjackAITurn.typeId)
-    .do((action: BlackjackAITurn | BlackjackAIDealerTurn) => {
-      this.bjService.blackJackAIHitOrStay(action.payload);
+    .withLatestFrom(this._store)
+    .do((data: [BlackjackAITurn | BlackjackAIDealerTurn, AppState]) => {
+      let action = data[0];
+      let appState = (<any> data[1]).appState; // TODO why is app state nested??
+      let tableState = appState != null ? appState.tableState : null;
+      let game: BlackjackGame = tableState != null ? tableState.game : null;
+      this.bjService.blackJackAIHitOrStay(action.payload, game != null ? game.aiSpeed : 1000);
     });
 
   @Effect()
@@ -59,7 +67,7 @@ export class AppStateEffects {
     });
 
   constructor(private actions$: Actions, private router: Router,
-              private bjService: BlackjackService) {
+              private bjService: BlackjackService, private _store: Store<AppState>) {
 
   }
 }

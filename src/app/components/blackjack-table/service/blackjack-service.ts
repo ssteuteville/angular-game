@@ -14,6 +14,7 @@ import {
 } from '../../../models/app-state.actions';
 import { BlackjackHand } from '../../../models/blackjack/blackjack-hand.model';
 import { Observable } from 'rxjs/Observable';
+import { BlackjackDealer } from '../../../models/blackjack/blackjack-dealer';
 
 @Injectable()
 export class BlackjackService {
@@ -25,7 +26,7 @@ export class BlackjackService {
 
   public createGame(userName: string, deckCount: number = 1): void {
     let deck = BlackjackDeck.generateDeck(deckCount);
-    let dealer = new CardDealer('Dealer Yu Gi', deck);
+    let dealer = new BlackjackDealer('Dealer Yu Gi', deck);
     let players: BlackjackPlayer[] = this._aiPlayers.concat([userName]).map((name) => {
       return new BlackjackPlayer(name);
     });
@@ -37,7 +38,7 @@ export class BlackjackService {
     this._store.dispatch(new BlackjackStarted(game));
   }
 
-  public blackJackAIHitOrStay(player: BlackjackPlayer | CardDealer): void {
+  public blackJackAIHitOrStay(player: BlackjackPlayer | BlackjackDealer, aiSpeed = 1000): void {
     let handAsBlackjack: BlackjackHand = (<BlackjackHand> player.hand);
     if (handAsBlackjack.getPossibleScores == null) {
       throw new Error('BlackjackPlayerNoPossibleScores');
@@ -59,6 +60,6 @@ export class BlackjackService {
           _.merge(<BlackjackPlayer> player, {isHitting}))
         );
       }
-    }, 1500 /*ms*/);
+    }, aiSpeed);
   }
 }

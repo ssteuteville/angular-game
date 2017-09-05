@@ -12,7 +12,7 @@ export class CardDealer {
     return !this.deck.isEmpty();
   }
 
-  public cardCount(): number {
+  public deckCount(): number {
     return this.deck.cardCount();
   }
 

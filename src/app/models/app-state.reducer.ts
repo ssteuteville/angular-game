@@ -2,7 +2,7 @@ import * as Immutable from 'immutable';
 import {
   AppStateActions, BlackjackAIDealerDecision, BlackjackAIDealerTurn, BlackjackPlayerDecision, BlackjackAITurn,
   BlackjackStarted, SetNameAction,
-  StartBlackjack, BlackjackAIDecision, BlackjackNextRound, BlackjackRoundComplete
+  StartBlackjack, BlackjackAIDecision, BlackjackNextRound, BlackjackRoundComplete, SetAISpeed
 } from './app-state.actions';
 import { AppState } from '../app.model';
 import { DEFAULT_APP_STATE } from './index';
@@ -19,6 +19,9 @@ export function appStateReducer(state: AppState = DEFAULT_APP_STATE,
   switch (action.type) {
     case SetNameAction.typeId:
       return _.merge(state, { playerName: action.payload});
+    case SetAISpeed.typeId:
+      state.tableState.game.aiSpeed = <number> action.payload;
+      return state;
     case StartBlackjack.typeId:
       return state;
     case BlackjackStarted.typeId:

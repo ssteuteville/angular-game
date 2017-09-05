@@ -2,12 +2,22 @@ import { Action } from '@ngrx/store';
 import { BlackjackGame } from './blackjack/blackjack-game.model';
 import { BlackjackPlayer } from './blackjack/blackjack-player.model';
 import { CardDealer } from './card-dealer.model';
+import { BlackjackDealer } from './blackjack/blackjack-dealer';
 
 export class SetNameAction implements Action {
   public static typeId = 'SET_NAME';
   public type = SetNameAction.typeId;
   public payload: string;
   constructor(payload: string) {
+    this.payload = payload;
+  }
+}
+
+export class SetAISpeed implements Action {
+  public static typeId = 'SET_AI_SPEED';
+  public type = SetAISpeed.typeId;
+  public payload: number;
+  constructor(payload: number) {
     this.payload = payload;
   }
 }
@@ -58,8 +68,8 @@ export class BlackjackRoundComplete implements Action {
 export class BlackjackAIDealerTurn implements Action {
   public static typeId = 'BLACKJACK_AI_DEALER_TURN';
   public type = BlackjackAIDealerTurn.typeId;
-  public payload: CardDealer;
-  constructor(payload: CardDealer) {
+  public payload: BlackjackDealer;
+  constructor(payload: BlackjackDealer) {
     this.payload = payload;
   }
 }
@@ -108,4 +118,5 @@ export type AppStateActions
   | BlackjackAIDecision
   | BlackjackNextRound
   | NoOperation
-  | BlackjackRoundComplete;
+  | BlackjackRoundComplete
+  | SetAISpeed;
