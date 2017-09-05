@@ -1,21 +1,28 @@
 <ng-template [ngIf]="game != null">
-  <div class="dealer">
-    <h3>{{game.dealer.name}}</h3>
-    <div class="player-hand">
-      <ng-template [ngIf]="game.dealerReveal">
-        <div *ngFor="let card of game.dealer.hand.sortedHand" class="suit-{{card.suit}} blackjack-card">
-          <div>{{card.display}}</div>
-        </div>
-      </ng-template>
-      <ng-template [ngIf]="!game.dealerReveal">
-        <div class="suit-{{dealersFirstCard.suit}} blackjack-card">
-          <div>{{dealersFirstCard.display}}</div>
-        </div>
-        <div class="blackjack-card face-down"></div>
-      </ng-template>
+  <div class="player-wrapper">
+    <div class="dealer-photo">
+      <img src="assets/img/yugioh.png">
     </div>
-    <div class="possible-scores" *ngIf="game.dealerReveal && game.dealer.hand.sortedHand.count() > 0">
-      <span>{{game.dealer.hand.getPossibleScores() | orDelimiter}}</span>
+    <div class="player dealer">
+      <div class="player-name">
+        {{game.dealer.name}}
+      </div>
+      <div class="player-hand">
+        <ng-template [ngIf]="game.dealerReveal">
+          <div *ngFor="let card of game.dealer.hand.sortedHand" class="suit-{{card.suit}} blackjack-card">
+            <div>{{card.display}}</div>
+          </div>
+        </ng-template>
+        <ng-template [ngIf]="!game.dealerReveal">
+          <div class="suit-{{dealersFirstCard.suit}} blackjack-card">
+            <div>{{dealersFirstCard.display}}</div>
+          </div>
+          <div class="blackjack-card face-down"></div>
+        </ng-template>
+      </div>
+      <div class="possible-scores" *ngIf="game.dealerReveal && game.dealer.hand.sortedHand.count() > 0">
+        Score(s): <span>{{game.dealer.hand.getPossibleScores() | orDelimiter}}</span>
+      </div>
     </div>
   </div>
   <small>cards left: {{game.dealer.cardCount()}}</small>
@@ -38,7 +45,7 @@
             </div>
           </div>
           <div class="possible-scores" *ngIf="player.hand.sortedHand.count() > 0">
-            <span> {{player.hand.getPossibleScores() | orDelimiter}} </span>
+            Score(s): <span> {{player.hand.getPossibleScores() | orDelimiter}} </span>
           </div>
           <div class="player-actions" *ngIf="player.name == playerName && playersTurn">
             <button type="button" (click)="playerHit(player)">Hit</button>

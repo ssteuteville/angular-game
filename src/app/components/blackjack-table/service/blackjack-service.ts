@@ -25,7 +25,7 @@ export class BlackjackService {
 
   public createGame(userName: string, deckCount: number = 1): void {
     let deck = BlackjackDeck.generateDeck(deckCount);
-    let dealer = new CardDealer('Blackjack Dealer', deck);
+    let dealer = new CardDealer('Dealer Yu Gi', deck);
     let players: BlackjackPlayer[] = this._aiPlayers.concat([userName]).map((name) => {
       return new BlackjackPlayer(name);
     });
